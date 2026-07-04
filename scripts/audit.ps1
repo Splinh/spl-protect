@@ -70,11 +70,21 @@ try {
     $wshEnabled = $true
 }
 
-# 5. Check PowerShell Execution Policy
+# 5. Check PowerShell Execution Policy (Check persistent settings)
 $execPolicy = "Unknown"
 try {
-    $execPolicy = (Get-ExecutionPolicy).ToString()
-} catch {}
+    $policyLM = Get-ExecutionPolicy -Scope LocalMachine
+    $policyCU = Get-ExecutionPolicy -Scope CurrentUser
+    if ($policyLM -ne "Undefined") {
+        $execPolicy = $policyLM.ToString()
+    } elseif ($policyCU -ne "Undefined") {
+        $execPolicy = $policyCU.ToString()
+    } else {
+        $execPolicy = "Restricted"
+    }
+} catch {
+    $execPolicy = "Unknown"
+}
 
 # Create JSON output object
 $outputObj = [PSCustomObject]@{
