@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPL Protect — Windows Security Auditor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated background grid and orbs -->
+    <div class="bg-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M12 8v4"/>
+                        <path d="M12 16h.01"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>SPL PROTECT</h1>
+                    <p>Windows OS Security Auditor for Secure Workstation</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="btn-scan" class="btn btn-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                    </svg>
+                    Quét Hệ Thống
+                </button>
+                <button id="btn-optimize-all" class="btn btn-secondary disabled" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                    Tối Ưu Tất Cả
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Grid -->
+        <main class="dashboard-grid">
+            <!-- Left Panel: Security Score -->
+            <section class="panel-left card">
+                <div class="score-container">
+                    <h3>ĐIỂM SỐ BẢO MẬT</h3>
+                    <div class="score-circle-wrapper">
+                        <svg class="score-circle" viewBox="0 0 120 120">
+                            <circle class="score-circle-bg" cx="60" cy="60" r="54" />
+                            <circle class="score-circle-bar" cx="60" cy="60" r="54" style="stroke-dashoffset: 339.292;" />
+                        </svg>
+                        <div class="score-text">
+                            <span id="score-val">--</span>
+                            <span class="percent">%</span>
+                        </div>
+                    </div>
+                    <div id="score-verdict" class="score-verdict info">Sẵn sàng quét hệ thống</div>
+                    <p class="score-desc">
+                        Hệ thống sẽ kiểm tra các cấu hình hệ điều hành Windows quan trọng ảnh hưởng trực tiếp đến sự an toàn của hệ thống và trình duyệt web.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Right Panel: Audit List -->
+            <section class="panel-right">
+                <div class="audit-list">
+                    <!-- Item 1: Windows Defender -->
+                    <div id="card-defender" class="audit-card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-header-row">
+                                <h4>Windows Defender Real-time Protection</h4>
+                                <span class="badge badge-pending">Chờ kiểm tra</span>
+                            </div>
+                            <p class="card-detail">Kiểm tra xem trình quét mã độc thời gian thực của Windows có đang hoạt động hay bị tắt ngầm bởi trojan/infostealer.</p>
+                            <div class="card-meta">
+                                <span class="meta-label">Trạng thái:</span>
+                                <span id="val-defender" class="meta-value">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2: Secure DNS -->
+                    <div id="card-dns" class="audit-card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="2" y1="12" x2="22" y2="12"/>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-header-row">
+                                <h4>Cấu hình DNS An Toàn (Secure DNS)</h4>
+                                <span class="badge badge-pending">Chờ kiểm tra</span>
+                            </div>
+                            <p class="card-detail">Đảm bảo máy tính sử dụng DNS bảo mật chống mã độc (Cloudflare 1.1.1.2 hoặc Quad9 9.9.9.9) nhằm phòng chống nhiễm độc DNS.</p>
+                            <div class="card-meta">
+                                <span class="meta-label">DNS hiện tại:</span>
+                                <span id="val-dns" class="meta-value">--</span>
+                            </div>
+                        </div>
+                        <div class="card-action-btn">
+                            <button id="btn-opt-dns" class="btn-action disabled" disabled>Tối Ưu DNS</button>
+                        </div>
+                    </div>
+
+                    <!-- Item 3: Windows Sandbox -->
+                    <div id="card-sandbox" class="audit-card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="9" y1="3" x2="9" y2="21"/>
+                                <line x1="15" y1="3" x2="15" y2="21"/>
+                                <line x1="3" y1="9" x2="21" y2="9"/>
+                                <line x1="3" y1="15" x2="21" y2="15"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-header-row">
+                                <h4>Windows Sandbox Feature</h4>
+                                <span class="badge badge-pending">Chờ kiểm tra</span>
+                            </div>
+                            <p class="card-detail">Windows Sandbox cho phép khởi chạy các tập tin lạ (.exe, .bat, script) trong môi trường ảo lập biệt lập, tự xóa sau khi tắt.</p>
+                            <div class="card-meta">
+                                <span class="meta-label">Trạng thái Sandbox:</span>
+                                <span id="val-sandbox" class="meta-value">--</span>
+                            </div>
+                        </div>
+                        <div class="card-action-btn">
+                            <button id="btn-opt-sandbox" class="btn-action disabled" disabled>Kích Hoạt Sandbox</button>
+                        </div>
+                    </div>
+
+                    <!-- Item 4: Windows Script Host -->
+                    <div id="card-wsh" class="audit-card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10 9 9 9 8 9"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-header-row">
+                                <h4>Windows Script Host (WSH)</h4>
+                                <span class="badge badge-pending">Chờ kiểm tra</span>
+                            </div>
+                            <p class="card-detail">Vô hiệu hóa WSH giúp bảo vệ máy khỏi trojan, infostealer được phân phối qua các tệp script độc hại (.vbs, .js) tải từ Internet.</p>
+                            <div class="card-meta">
+                                <span class="meta-label">Trạng thái WSH:</span>
+                                <span id="val-wsh" class="meta-value">--</span>
+                            </div>
+                        </div>
+                        <div class="card-action-btn">
+                            <button id="btn-opt-wsh" class="btn-action disabled" disabled>Vô Hiệu Hóa WSH</button>
+                        </div>
+                    </div>
+
+                    <!-- Item 5: PowerShell Policy -->
+                    <div id="card-policy" class="audit-card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="4 17 10 11 4 5"/>
+                                <line x1="12" y1="19" x2="20" y2="19"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-header-row">
+                                <h4>PowerShell Execution Policy</h4>
+                                <span class="badge badge-pending">Chờ kiểm tra</span>
+                            </div>
+                            <p class="card-detail">Kiểm soát chính sách thực thi script PowerShell của hệ thống nhằm ngăn chặn các mã độc tự ý kích hoạt script lén lút.</p>
+                            <div class="card-meta">
+                                <span class="meta-label">Policy hiện tại:</span>
+                                <span id="val-policy" class="meta-value">--</span>
+                            </div>
+                        </div>
+                        <div class="card-action-btn">
+                            <button id="btn-opt-policy" class="btn-action disabled" disabled>Tối Ưu Policy</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Console Log Area -->
+        <footer class="console-panel card">
+            <div class="console-header">
+                <span>💻 TIẾN TRÌNH HỆ THỐNG (SYSTEM LOGS)</span>
+                <button id="btn-clear-log" class="btn-text">Xóa Log</button>
+            </div>
+            <div id="console-output" class="console-body">
+                <div class="log-line info">[System] Ứng dụng đã khởi động. Nhấn "Quét Hệ Thống" để bắt đầu kiểm tra bảo mật.</div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
